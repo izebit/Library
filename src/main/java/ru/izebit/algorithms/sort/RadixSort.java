@@ -1,6 +1,5 @@
 package ru.izebit.algorithms.sort;
 
-import ru.izebit.other.InvalidTypeListException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -11,10 +10,19 @@ import java.util.List;
  */
 public class RadixSort extends Sort<Integer> {
 
+    /**
+     * @param numeric    число в котором берется байт
+     * @param byteNumber номер байта
+     * @return значение byteNumber байта в числе numeric
+     */
+    private static int getByte(int numeric, int byteNumber) {
+        return (numeric >> (8 * byteNumber)) & 255;
+    }
+
     @Override
-    public void customSort(List<Integer> list) throws InvalidTypeListException {
+    protected void customSort(List<Integer> list) throws IllegalArgumentException {
         if (Collections.min(list).compareTo(0) < 0) {
-            throw new InvalidTypeListException("массив должен содержать неотрицательные элементы");
+            throw new IllegalArgumentException("Массив должен содержать неотрицательные элементы");
         }
         for (int i = 0; i < Integer.SIZE / 8; i++) {
             int[] c = new int[256];
@@ -31,14 +39,5 @@ public class RadixSort extends Sort<Integer> {
             list.clear();
             list.addAll(Arrays.asList(b));
         }
-    }
-
-    /**
-     * @param numeric    число в котором берется байт
-     * @param byteNumber номер байта
-     * @return значение byteNumber байта в числе numeric
-     */
-    private static int getByte(int numeric, int byteNumber) {
-        return (numeric >> (8 * byteNumber)) & 255;
     }
 }

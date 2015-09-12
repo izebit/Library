@@ -4,31 +4,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created with IntelliJ IDEA.
- * User: artem
- * Date: 03.08.12
- * Time: 23:19
- * сортировка слиянием
+ * Сортировка слиянием
  * время работы O(nlog(n))
  */
 public class MergeSort<T extends Comparable<? super T>> extends Sort<T> {
     @Override
-    public void customSort(List list) {
+    protected void customSort(List<T> list) {
         partition(list, 0, list.size() - 1);
     }
 
-    private void partition(List<T> list, int left, int rigth) {
-        int center = left + (rigth - left) / 2;
+    private void partition(List<T> list, int left, int right) {
+        int center = left + (right - left) / 2;
         if (left < center) partition(list, left, center);
-        if (center + 1 < rigth) partition(list, center, rigth);
-        merge(list, left, center, rigth);
+        if (center + 1 < right) partition(list, center, right);
+        merge(list, left, center, right);
     }
 
-    private void merge(List<T> list, int left, int center, int rigth) {
+    private void merge(List<T> list, int left, int center, int right) {
         int leftRange = left;
         int rightRange = center + 1;
-        ArrayList<T> buffer = new ArrayList<T>(rigth - left);
-        while (leftRange <= center && rightRange <= rigth) {
+        ArrayList<T> buffer = new ArrayList<T>(right - left);
+        while (leftRange <= center && rightRange <= right) {
             if (list.get(leftRange).compareTo(list.get(rightRange)) > 0) {
                 buffer.add(list.get(leftRange));
                 leftRange++;
@@ -41,7 +37,7 @@ public class MergeSort<T extends Comparable<? super T>> extends Sort<T> {
             buffer.add(list.get(leftRange));
             leftRange++;
         }
-        while (rightRange <= rigth) {
+        while (rightRange <= right) {
             buffer.add(list.get(rightRange));
             rightRange++;
         }

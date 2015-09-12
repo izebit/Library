@@ -1,25 +1,17 @@
 package ru.izebit.algorithms.sort;
 
-import ru.izebit.other.InvalidTypeListException;
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Сортировка Шелла, время работы O(n^(2/3))
+ *
  * @author Artem Konovalov
  * @version 0.1
  */
-public class Shell<T extends Comparable<T>> extends Sort<T> {
+public class ShellSort<T extends Comparable<T>> extends Sort<T> {
     @Override
-    public void customSort(final List<T> list) throws InvalidTypeListException {
-        List<Integer> steps = new ArrayList<Integer>();
-        int value = 1;
-        do {
-            steps.add(value);
-            value = value * 3 + 1;
-        } while (3 * value < list.size());
-
-        for (Integer step : steps) {
+    protected void customSort(final List<T> list) throws IllegalArgumentException {
+        for (int step = list.size() / 2; step > 0; step--) {
             for (int j = step; j < list.size(); j++) {
                 int index = j - step;
                 T k = list.get(j);

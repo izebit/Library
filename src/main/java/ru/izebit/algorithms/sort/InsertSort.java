@@ -8,7 +8,7 @@ import java.util.List;
  */
 public class InsertSort<T extends Comparable<? super T>> extends Sort<T> {
     @Override
-    public void customSort(List<T> list) {
+    protected void customSort(List<T> list) {
         for (int i = 1; i < list.size(); i++) {
             T currentElement = list.get(i);
             int j = i - 1;

@@ -1,7 +1,5 @@
 package ru.izebit.algorithms.sort;
 
-import ru.izebit.other.InvalidTypeListException;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -15,13 +13,13 @@ public class CountSort<T extends Integer> extends Sort<T> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public void customSort(List<T> list) throws InvalidTypeListException {
+    protected void customSort(List<T> list) throws IllegalArgumentException {
         if (Collections.min(list).compareTo(0) < 0) {
-            throw new InvalidTypeListException("список должен содержать не отрицательные элементы");
+            throw new IllegalArgumentException("Список должен содержать не отрицательные элементы");
         }
 
         int[] c = new int[Collections.max(list).intValue() + 1];
-        List<Integer> b = new ArrayList<Integer>(list.size());
+        List<Integer> b = new ArrayList<>(list.size());
         for (T aList : list) {
             c[aList.intValue()] += 1;
             b.add(null);

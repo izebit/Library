@@ -10,7 +10,7 @@ import java.util.List;
 
 public class HeapSort<T extends Comparable<? super T>> extends Sort<T> {
     @Override
-    public void customSort(List<T> list) {
+    protected void customSort(List<T> list) {
         for (int i = list.size() / 2; i >= 0; i--) {
             heapify(list, i, list.size());
         }

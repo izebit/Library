@@ -10,7 +10,7 @@ import java.util.List;
 public class QuickSort<T extends Comparable<? super T>> extends Sort<T> {
 
     @Override
-    public void customSort(List<T> list) {
+    protected void customSort(List<T> list) {
         qSort(list, 0, list.size() - 1);
     }
 
