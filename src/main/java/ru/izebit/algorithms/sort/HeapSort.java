@@ -8,7 +8,7 @@ import java.util.List;
  * время работы O(nlog(n))
  */
 
-public class HeapSort<T extends Comparable<? super T>> extends Sort<T> {
+public class HeapSort<T extends Comparable<T>> extends Sort<T> {
     @Override
     protected void customSort(List<T> list) {
         for (int i = list.size() / 2; i >= 0; i--) {
