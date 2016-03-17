@@ -4,7 +4,7 @@ package ru.izebit.structs;
  * @author Artem Konovalov
  *         date 4/4/15
  *         дерево отрезков, для подсчета суммы для произвольного интервала
- * @See <a href="https://en.wikipedia.org/wiki/Segment_tree">segment tree</>
+ * @see <a href="https://en.wikipedia.org/wiki/Segment_tree">segment tree</>
  */
 public class SegmentTree {
     private final int[] array;

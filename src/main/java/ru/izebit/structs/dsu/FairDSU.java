@@ -12,12 +12,23 @@ public class FairDSU<T> implements DSU<T> {
     private final Map<T, Integer> rank = new HashMap<>();
 
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param element элемент
+     */
     @Override
     public void makeSet(T element) {
         tree.put(element, element);
         rank.put(element, 1);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param element элемент
+     * @return
+     */
     @Override
     public T find(T element) {
         if (element.equals(tree.get(element)))
@@ -29,6 +40,13 @@ public class FairDSU<T> implements DSU<T> {
         return head;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param firstElement  элемент с которым отождествляется первое множество
+     * @param secondElement элемент с которым отождествляется второе
+     * @return элемент для объединенного множества
+     */
     @Override
     public T union(T firstElement, T secondElement) {
         if (rank.get(firstElement).compareTo(rank.get(secondElement)) < 0) {

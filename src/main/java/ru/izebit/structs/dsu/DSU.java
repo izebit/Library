@@ -6,7 +6,7 @@ package ru.izebit.structs.dsu;
  * интерфейс для системы непересекающихся множеств
  * временная сложность для всех операций О(1)
  *
- * @See <a href="https://habrahabr.ru/post/104772/">disjoint set union</a>
+ * @see <a href="https://habrahabr.ru/post/104772/">disjoint set union</a>
  */
 public interface DSU<T> {
 
