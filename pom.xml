@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>izebit.myLib</artifactId>
+    <artifactId>izebit.library</artifactId>
     <groupId>ru.izebit</groupId>
     <name>myLib</name>
     <packaging>jar</packaging>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
 
     <dependencies>
         <dependency>
@@ -20,6 +20,7 @@
 
 
     <build>
+
         <directory>target</directory>
         <outputDirectory>target/classes</outputDirectory>
         <finalName>${artifactId}-${version}</finalName>
@@ -40,6 +41,16 @@
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.9</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
             </plugin>
         </plugins>
     </build>

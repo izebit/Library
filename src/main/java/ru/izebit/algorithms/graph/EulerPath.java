@@ -6,7 +6,6 @@ import ru.izebit.structs.graph.components.Edge;
 import java.util.*;
 
 /**
- * Created with IntelliJ IDEA.
  * Date: 18.10.12
  * Time: 22:55
  *
@@ -17,16 +16,18 @@ import java.util.*;
 
 public class EulerPath {
     public static <T> List<Edge<T>> find(NotDirectedGraph<T> graph) {
-        Map<T, List<T>> vertices = new HashMap<T, List<T>>(graph.getVertexCount());
+        Map<T, List<T>> vertices = new HashMap<>(graph.getVertexCount());
         //проверка на критерий существования эйлерового пути
         T startVertex = graph.getVertices().iterator().next();
-        int countVertex = 0; //колличество вершин с нечетными степенями
+
+        //колличество вершин с нечетными степенями
+        int countVertex = 0;
         for (T vertex : graph.getVertices()) {
             if (graph.getEdges(vertex).size() % 2 == 1) {
                 countVertex++;
                 startVertex = vertex;
             }
-            List<T> list = new ArrayList<T>(graph.getEdges(vertex).size());
+            List<T> list = new ArrayList<>(graph.getEdges(vertex).size());
             for (Edge<T> edge : graph.getEdges(vertex)) {
                 list.add(edge.getTarget());
             }
@@ -61,8 +62,8 @@ public class EulerPath {
             }
         }
 
-        for (T vertex : vertices.keySet()) {
-            if (vertices.get(vertex).size() != 0) {
+        for (Map.Entry<T, List<T>> entry : vertices.entrySet()) {
+            if (entry.getValue().size() != 0) {
                 return null;
             }
         }

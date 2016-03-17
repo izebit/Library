@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created with IntelliJ IDEA.
  * Date: 08.09.12
  * Time: 16:12
  *
@@ -24,16 +23,16 @@ public class RedBlackTree<K extends Comparable<K>, V> {
     private int size;
     private Node<K, V> head;
 
+    public RedBlackTree() {
+        head = NIL;
+        size = 0;
+    }
+
     /**
      * @return возвращает количество записей в дереве
      */
     public int size() {
         return size;
-    }
-
-    public RedBlackTree() {
-        head = NIL;
-        size = 0;
     }
 
     /**
@@ -383,6 +382,11 @@ public class RedBlackTree<K extends Comparable<K>, V> {
     }
 
 
+    private static enum Colour {
+        black,
+        red
+    }
+
     private static class Node<K extends Comparable<K>, V> {
         private K key;
         private V value;
@@ -433,10 +437,5 @@ public class RedBlackTree<K extends Comparable<K>, V> {
         private Node<K, V> getUncle() {
             return (parent.parent.leftChild == parent) ? parent.parent.rightChild : parent.parent.leftChild;
         }
-    }
-
-    private static enum Colour {
-        black,
-        red
     }
 }

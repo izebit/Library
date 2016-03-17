@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Created with IntelliJ IDEA.
- *
  * @author : artem
  *         <p>
  *         набор тестов для проверки корректности работы алгоритма сортировки

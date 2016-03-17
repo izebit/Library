@@ -5,7 +5,6 @@ import ru.izebit.structs.graph.components.Edge;
 import java.util.*;
 
 /**
- * Created with IntelliJ IDEA.
  * Date: 03.10.12
  * Time: 19:09
  *

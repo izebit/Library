@@ -2,13 +2,13 @@ package ru.izebit.algorithms.graph;
 
 import ru.izebit.structs.graph.Graph;
 import ru.izebit.structs.graph.components.Edge;
+
 import java.util.*;
 
 /**
- * Created with IntelliJ IDEA.
  * Time: 13:23
- * <p>
  * Date: 06.10.12
+ * <p>
  * алгоритм Форда-Фалкерсона решающий задачу о максимальном потоке
  *
  * @author Artem Konovalov
@@ -17,17 +17,17 @@ public class FordFalkerson<T> {
     private Graph<T> graph;
     private int[][] capacity;              //пропускная способность
     private int[][] flow;                  //размер потока
-    private HashMap<T, Integer> vertices;  //вершины графа
+    private Map<T, Integer> vertices;  //вершины графа
 
     private int maxFlow;                   //максимальный поток который возможно протолкнуть для текущего пути
 
     public FordFalkerson(Graph<T> graph) {
         this.graph = graph;
-        vertices = new HashMap<T, Integer>();
+        vertices = new HashMap<>();
         int index = 0;
-        for (T v : graph.getVertices()) {
+        for (T v : graph.getVertices())
             vertices.put(v, index++);
-        }
+
 
         capacity = new int[graph.getVertexCount()][graph.getVertexCount()];
 

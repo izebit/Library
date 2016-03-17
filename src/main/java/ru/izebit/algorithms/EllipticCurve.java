@@ -1,9 +1,8 @@
-package ru.izebit.structs;
+package ru.izebit.algorithms;
 
 import java.math.BigInteger;
 
 /**
- * Created with IntelliJ IDEA.
  * Date: 11/30/12
  * Time: 4:08 AM
  *
@@ -12,15 +11,23 @@ import java.math.BigInteger;
  */
 
 public class EllipticCurve {
-    public final BigInteger a;
-    public final BigInteger q;
-
     private static final BigInteger THREE = BigInteger.valueOf(3);
     private static final BigInteger TWO = BigInteger.valueOf(2);
+    public final BigInteger a;
+    public final BigInteger q;
 
     public EllipticCurve(BigInteger a, BigInteger q) {
         this.a = a;
         this.q = q;
+    }
+
+    //исключение появляющиеся когда невозможно найти обратный элемент в поле Fq
+    public static class HasNotInverseElement extends Exception {
+        public final BigInteger dx; //элемент для которого нельзя найти обратный элемент
+
+        public HasNotInverseElement(BigInteger dx) {
+            this.dx = dx;
+        }
     }
 
     //точка эллиптической кривой
@@ -128,15 +135,6 @@ public class EllipticCurve {
         @Override
         public int hashCode() {
             return x.hashCode() + y.hashCode();
-        }
-    }
-
-    //исключение появляющиеся когда невозможно найти обратный элемент в поле Fq
-    public static class HasNotInverseElement extends Exception {
-        public final BigInteger dx; //элемент для которого нельзя найти обратный элемент
-
-        public HasNotInverseElement(BigInteger dx) {
-            this.dx = dx;
         }
     }
 }

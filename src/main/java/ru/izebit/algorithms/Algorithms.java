@@ -6,9 +6,12 @@ import java.util.List;
 import java.util.RandomAccess;
 
 /**
- * класс содержащий набор различных алгоритмов написанных собственноручно для их запоминания
+ * класс содержащий набор различных алгоритмов
  */
-public class Algorithms {
+public final class Algorithms {
+
+    private Algorithms() {
+    }
 
     /**
      * возвращает индекс  заданного элемента  в списке
@@ -145,18 +148,17 @@ public class Algorithms {
      */
     public static double search(Function function, double value, double error) {
         double left = 0;
-        while (function.invoke(left) > value) {
+        while (function.invoke(left) > value)
             left -= 10;
-        }
+
         double right = 0;
-        while (function.invoke(right) < value) {
+        while (function.invoke(right) < value)
             right += 10;
-        }
+
         double currentValue;
         double middle;
         do {
             middle = left + (right - left) / 2;
-            System.out.println(left + " " + middle + " " + right);
             currentValue = function.invoke(middle);
             if (currentValue > value) right = middle;
             else left = middle;
@@ -175,16 +177,15 @@ public class Algorithms {
      * @return возвращает абсцисс в котором функция достигает своего минимума
      */
     public static double ternarySearch(Function function, double leftRange, double rightRange, double error) {
-        double a = 0;
-        double b = 0;
         while (Math.abs(rightRange - leftRange) > error) {
-            a = leftRange + (rightRange - leftRange) * 4d / 10;
-            b = leftRange + (rightRange - leftRange) * 6d / 10;
-            if (function.invoke(a) > function.invoke(b)) {
+            double a = leftRange + (rightRange - leftRange) * 4d / 10;
+            double b = leftRange + (rightRange - leftRange) * 6d / 10;
+
+            if (function.invoke(a) > function.invoke(b))
                 leftRange = a;
-            } else {
+            else
                 rightRange = b;
-            }
+
         }
         return leftRange;
     }

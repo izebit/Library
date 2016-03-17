@@ -5,13 +5,15 @@ package ru.izebit.structs;
  */
 
 public class Queue<E> {
+    private static final int DEFAULT_SIZE = 10;
+
     private E[] array;
     private int head;
     private int tail;
     private int size;
 
     public Queue() {
-        this(10);
+        this(DEFAULT_SIZE);
     }
 
     @SuppressWarnings("unchecked")

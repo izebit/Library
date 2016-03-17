@@ -11,7 +11,7 @@ package ru.izebit.numericalMethods;
  * Затем обратная перестановка для U=y , решением будет x - корни исходной системы уравний
  *
  * @author Artem Konovalov
- *         Created with IntelliJ IDEA.
+ *         <p>
  *         Date: 23.09.12
  *         Time: 0:59
  */
@@ -67,7 +67,7 @@ public class Lup {
         for (int i = 0; i < array.length; i++) {
             double value = 0;
             for (int j = 0; j < i; j++) {
-                value += (i == j ? 1 : array[i][j]) * y[j];
+                value += array[i][j] * y[j];
             }
             y[i] = array[i][array[0].length - 1] - value;
         }

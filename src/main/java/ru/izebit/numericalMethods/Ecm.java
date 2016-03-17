@@ -1,6 +1,6 @@
 package ru.izebit.numericalMethods;
 
-import ru.izebit.structs.EllipticCurve;
+import ru.izebit.algorithms.EllipticCurve;
 
 import java.math.BigInteger;
 import java.util.Random;

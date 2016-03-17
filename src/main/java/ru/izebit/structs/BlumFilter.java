@@ -3,13 +3,12 @@ package ru.izebit.structs;
 import java.util.BitSet;
 
 /**
- * Created with IntelliJ IDEA.
  * @author Artem Konovalov
- * Date: 20.08.12
- * Time: 0:10
- * Фильтр Блума - структура данных, позволяющая определить, имеется ли данный объект в
- * множестве или нет
- * может ошибочно определить, что добавлен. обратное неверно
+ *         Date: 20.08.12
+ *         Time: 0:10
+ *         Фильтр Блума - структура данных, позволяющая определить, имеется ли данный объект в
+ *         множестве или нет
+ *         может ошибочно определить, что добавлен. обратное неверно
  */
 public class BlumFilter {
 
@@ -46,11 +45,11 @@ public class BlumFilter {
      * @return true-добавлялся, иначе false
      */
     public boolean contains(Object element) {
-        for (int i = 0; i < factors.length; i++) {
-            if (!table.get(hash(element, i))) {
+        for (int i = 0; i < factors.length; i++)
+            if (!table.get(hash(element, i)))
                 return false;
-            }
-        }
+
+
         return true;
     }
 

@@ -1,7 +1,6 @@
 package ru.izebit.structs.graph.components;
 
 /**
- * Created with IntelliJ IDEA.
  * Date: 03.10.12
  * Time: 18:58
  *

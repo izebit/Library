@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.RandomAccess;
 
-public abstract class Sort<T extends Comparable<T>> {
+public abstract class Sort<T extends Comparable<? super T>> {
     /**
      * Производит сортировку списка
      *

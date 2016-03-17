@@ -4,6 +4,7 @@ package ru.izebit.structs;
  * @author Artem Konovalov
  *         date 4/4/15
  *         дерево отрезков, для подсчета суммы для произвольного интервала
+ * @See <a href="https://en.wikipedia.org/wiki/Segment_tree">segment tree</>
  */
 public class SegmentTree {
     private final int[] array;
@@ -32,7 +33,7 @@ public class SegmentTree {
         values[1] = set(index, value, 0, array.length, 1);
     }
 
-    public int set(int index, int value, int left, int right, int vertexNumber) {
+    private int set(int index, int value, int left, int right, int vertexNumber) {
         if (left == right) {
             return values[vertexNumber] = value;
         }

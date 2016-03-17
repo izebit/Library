@@ -1,8 +1,6 @@
 package ru.izebit.algorithms.string;
 
 /**
- * Created with IntelliJ IDEA.
- *
  * @author : artem
  *         Date: 18.08.12
  *         Time: 17:53
