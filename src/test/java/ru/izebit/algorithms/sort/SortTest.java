@@ -1,75 +1,55 @@
 package ru.izebit.algorithms.sort;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+
+import java.util.*;
 
 /**
  * @author : artem
  *         <p>
  *         набор тестов для проверки корректности работы алгоритма сортировки
  */
+@RunWith(value = Parameterized.class)
 public class SortTest {
-    public static <T extends Comparable<T>> void checkCorrect(List<T> original, List<T> sortedList) {
-        System.out.print("проверка на отсортированности: ");
-        if (checkSort(sortedList)) {
-            System.out.println("true");
-        } else {
-            System.out.println("false");
-        }
 
-        System.out.print("проверка присутствия всех элементов: ");
-        if (checkContainElement(original, sortedList)) {
-            System.out.println("true");
-        } else {
-            System.out.println("false");
-        }
+
+    private final List<Integer> list;
+    private final List<Integer> original;
+
+    public SortTest(Sort<Integer> sort, int size, int range) {
+        original = getArray(size, range);
+        list = new ArrayList<>();
+        list.addAll(original);
+
+        sort.sort(list);
     }
 
-    /**
-     * проверяет список на отсортированность в естественном порядке
-     *
-     * @param list список для проверки
-     * @return результат проверки
-     */
-    public static <T extends Comparable<T>> boolean checkSort(List<T> list) {
-        if (list.size() < 2) {
-            return true;
-        }
-        boolean result = true;
-        for (int i = 1; i < list.size(); i++) {
-            if (list.get(i - 1).compareTo(list.get(i)) > 0) {
-                result = false;
-                break;
-            }
-        }
-        return result;
-    }
+    @Parameterized.Parameters
+    public static Collection<Object[]> data() {
+        Collection<Object[]> data = new ArrayList<>();
+        data.add(new Object[]{new HeapSort<Integer>(), 100_000, Integer.MAX_VALUE});
+        data.add(new Object[]{new HeapSort<Integer>(), 10_000, Integer.MAX_VALUE});
+        data.add(new Object[]{new HeapSort<Integer>(), 10, Integer.MAX_VALUE});
 
-    /**
-     * проверка на содержимость всех элементов после сортировки
-     *
-     * @param original   исходный список
-     * @param sortedList отсортированый список
-     * @return если все хорошо то true, else false
-     */
-    public static <T extends Comparable<T>> boolean checkContainElement(List<T> original, List<T> sortedList) {
-        if (original.size() != sortedList.size()) {
-            return false;
-        }
+        data.add(new Object[]{new MergeSort<Integer>(), 100_000, Integer.MAX_VALUE});
+        data.add(new Object[]{new MergeSort<Integer>(), 10_000, Integer.MAX_VALUE});
+        data.add(new Object[]{new MergeSort<Integer>(), 10, Integer.MAX_VALUE});
 
-        boolean result = true;
-        List<T> subList = new ArrayList<T>(original);
-        Collections.sort(subList);
-        List<T> subSortList = new ArrayList<T>(sortedList);
-        for (int i = 0; i < subList.size(); i++) {
-            if (!subList.get(i).equals(subSortList.get(i))) {
-                result = false;
-                break;
-            }
-        }
-        return result;
+
+        data.add(new Object[]{new QuickSort<Integer>(), 100_000, Integer.MAX_VALUE});
+        data.add(new Object[]{new QuickSort<Integer>(), 10_000, Integer.MAX_VALUE});
+        data.add(new Object[]{new QuickSort<Integer>(), 10, Integer.MAX_VALUE});
+
+
+        data.add(new Object[]{new BubbleSort<Integer>(), 10_000, Integer.MAX_VALUE});
+        data.add(new Object[]{new BubbleSort<Integer>(), 1_000, Integer.MAX_VALUE});
+        data.add(new Object[]{new BubbleSort<Integer>(), 10, Integer.MAX_VALUE});
+
+
+        return data;
     }
 
     /**
@@ -87,6 +67,22 @@ public class SortTest {
         }
         Collections.shuffle(list);
         return list;
+    }
+
+    @Test
+    public void checkSort() {
+        for (int i = 1; i < list.size(); i++)
+            Assert.assertTrue(list.get(i - 1).compareTo(list.get(i)) <= 0);
+    }
+
+    public void checkContainElement() {
+        Assert.assertTrue(original.size() != list.size());
+
+        List<Integer> subList = new ArrayList<>(original);
+        Collections.sort(subList);
+        List<Integer> subSortList = new ArrayList<>(list);
+        for (int i = 0; i < subList.size(); i++)
+            Assert.assertTrue(subList.get(i).equals(subSortList.get(i)));
     }
 
 }
