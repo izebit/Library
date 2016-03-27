@@ -13,19 +13,21 @@ public class MergeSort<T extends Comparable<? super T>> extends Sort<T> {
         partition(list, 0, list.size() - 1);
     }
 
-    private void partition(List<T> list, int left, int right) {
-        int center = left + (right - left) / 2;
-        if (left < center) partition(list, left, center);
-        if (center + 1 < right) partition(list, center, right);
-        merge(list, left, center, right);
+    private void partition(List<T> list, final int left, final int right) {
+        if (right - left <= 0) return;
+
+        int middle = left + (right - left) / 2;
+        if (left < middle) partition(list, left, middle);
+        if (middle + 1 < right) partition(list, middle + 1, right);
+        merge(list, left, middle, right);
     }
 
-    private void merge(List<T> list, int left, int center, int right) {
+    private void merge(List<T> list, final int left, final int center, final int right) {
         int leftRange = left;
         int rightRange = center + 1;
-        ArrayList<T> buffer = new ArrayList<T>(right - left);
+        List<T> buffer = new ArrayList<>(right - left);
         while (leftRange <= center && rightRange <= right) {
-            if (list.get(leftRange).compareTo(list.get(rightRange)) > 0) {
+            if (list.get(leftRange).compareTo(list.get(rightRange)) < 0) {
                 buffer.add(list.get(leftRange));
                 leftRange++;
             } else {
