@@ -1,3 +1,5 @@
+[![Coverage Status](https://coveralls.io/repos/github/izebit/Library/badge.svg?branch=master)](https://coveralls.io/github/izebit/Library?branch=master)
+
 #Library  
         
 ##Библиотечка с алгоритмами и структурами данных  
