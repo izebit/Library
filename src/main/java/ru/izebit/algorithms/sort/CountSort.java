@@ -13,9 +13,8 @@ public class CountSort extends Sort<Integer> {
     @Override
     @SuppressWarnings("unchecked")
     protected void customSort(List<Integer> list) throws IllegalArgumentException {
-        if (Collections.min(list).compareTo(0) < 0) {
+        if (Collections.min(list).compareTo(Integer.valueOf(0)) < 0)
             throw new IllegalArgumentException("Список должен содержать не отрицательные элементы");
-        }
 
         int[] c = new int[Collections.max(list) + 1];
         List<Integer> b = new ArrayList<>(list.size());
@@ -23,12 +22,12 @@ public class CountSort extends Sort<Integer> {
             c[aList] += 1;
             b.add(null);
         }
-        for (int i = 1; i < c.length; i++) {
+        for (int i = 1; i < c.length; i++)
             c[i] += c[i - 1];
-        }
-        for (Integer aList : list) {
+
+        for (Integer aList : list)
             b.set(--c[aList], aList);
-        }
+
         list.clear();
         list.addAll(b);
     }
