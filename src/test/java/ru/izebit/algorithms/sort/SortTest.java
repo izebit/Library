@@ -123,7 +123,7 @@ public class SortTest {
      * @param range if > 0 массив заполняется числами из диапазона от 0 до range, иначе -range до 0
      * @return сгенерированный массив
      */
-    private static List<Integer> getArray(int size, int range) {
+    public static List<Integer> getArray(int size, int range) {
         List<Integer> list = new ArrayList<>(size);
         Random r = new Random(System.currentTimeMillis());
         for (int i = 0; i < size; i++) {
