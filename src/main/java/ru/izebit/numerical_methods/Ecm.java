@@ -1,4 +1,4 @@
-package ru.izebit.numericalMethods;
+package ru.izebit.numerical_methods;
 
 import ru.izebit.algorithms.EllipticCurve;
 

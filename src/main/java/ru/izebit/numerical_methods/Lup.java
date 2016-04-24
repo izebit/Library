@@ -1,4 +1,4 @@
-package ru.izebit.numericalMethods;
+package ru.izebit.numerical_methods;
 
 /**
  * решение СЛАУ вида Ax=b методом LUP разложения матрицы
