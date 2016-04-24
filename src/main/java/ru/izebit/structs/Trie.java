@@ -2,6 +2,8 @@ package ru.izebit.structs;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * сжатый бор
@@ -10,294 +12,219 @@ import java.util.List;
  * @version 0.1
  */
 public class Trie<V> {
-    private final Node root = new Node("", null);
-    private int size;
+    private Node<V> root = new Node<>("", null, false, null);
 
-    public Trie() {
-        size = 0;
-    }
 
     public void add(String key, V value) {
-        if (key.isEmpty()) {
-            throw new IllegalArgumentException("key is empty");
+        if (key.length() == 0) {
+            root.value = value;
+            root.isContainsValue = true;
+            return;
         }
 
-        Node parent = null;
-        for (Node node : root.childs) {
-            if (node.key.charAt(0) == key.charAt(0)) {
-                parent = node;
+        AtomicInteger offset = new AtomicInteger(0);
+        Node<V> node = recursiveSearch(key, offset, root);
+        if (node == null) {
+            node = new Node<>(key, value, true, root);
+            root.children.add(node);
+        } else {
+
+            int index = 0;
+            for (int i = 0; i < node.key.length() && (offset.get() + i) < key.length(); i++) {
+                if (node.key.charAt(i) != key.charAt(offset.get() + i))
+                    break;
+                index = i + 1;
+            }
+
+            if (index < node.key.length()) {
+                node.parent.children.remove(node);
+                Node<V> middle = new Node<>(node.key.substring(0, index), null, false, node.parent);
+                middle.parent.children.add(middle);
+                node.parent = middle;
+                if (index + offset.get() == key.length()) {
+                    middle.isContainsValue = true;
+                    middle.value = value;
+                } else {
+                    Node<V> newChild = new Node<>(key.substring(offset.get() + index), value, true, middle);
+                    middle.children.add(newChild);
+                }
+                node.key = node.key.substring(index, node.key.length());
+                middle.children.add(node);
+            } else if (index == node.key.length()) {
+
+                if (index + offset.get() == key.length()) {
+                    node.value = value;
+                    node.isContainsValue = true;
+                } else {
+                    if (node.isContainsValue) {
+                        Node<V> newNode = new Node<>(key.substring(offset.get() + index), value, true, node);
+                        node.children.add(newNode);
+
+                    } else {
+                        node.key += key.substring(offset.get() + index);
+                        node.isContainsValue = true;
+                        node.value = value;
+                    }
+                }
+
+            }
+        }
+    }
+
+    private Node<V> recursiveSearch(String key, AtomicInteger offset, Node<V> node) {
+        Node<V> currentNode = null;
+        for (Node<V> child : node.children)
+            if (key.charAt(offset.get()) == child.key.charAt(0)) {
+                currentNode = child;
                 break;
             }
-        }
 
-        if (parent == null) {
-            root.addChild(new Node(key, value));
-            size++;
-        } else {
-            root.childs.remove(parent);
-            parent = addition(key, value, parent);
-            root.addChild(parent);
-        }
-    }
+        if (currentNode == null)
+            return null;
 
-    private Node addition(String key, V value, Node node) {
 
-        int index = 0;
-        while (index < key.length() && index < node.key.length() && key.charAt(index) == node.key.charAt(index)) {
-            index++;
-        }
+        for (int i = 0; i < currentNode.key.length() && (offset.get() + i) < key.length(); i++)
+            if (currentNode.key.charAt(i) != key.charAt(offset.get() + i))
+                return currentNode;
 
-        if (index == key.length()) {
-            if (index == node.key.length()) {
-                node.value = value;
-                size = !node.used ? size + 1 : size;
-                node.used = true;
-                return node;
-            } else {
-                size++;
-                Node n = new Node(key.substring(0, index), value);
-                n.addChild(node);
-                node.key = node.key.substring(index);
-                return n;
-            }
-        } else {
-            if (index == node.key.length()) {
-                Node parent = null;
-                for (Node n : node.childs) {
-                    if (n.key.charAt(0) == key.charAt(index)) {
-                        parent = n;
-                        break;
-                    }
-                }
-                if (parent == null) {
-                    Node n = new Node(key.substring(index), value);
-                    node.addChild(n);
-                    size++;
-                    return node;
-                } else {
-                    node.childs.remove(parent);
-                    parent = addition(key.substring(index), value, parent);
-                    node.addChild(parent);
-                    return node;
-                }
-            } else {
-                size++;
-                Node middle = new Node(key.substring(0, index), null);
-                middle.used = false;
-                node.key = node.key.substring(index);
-                key = key.substring(index);
-                middle.addChild(new Node(key, value));
-                middle.addChild(node);
-                return middle;
-            }
+
+        int index = offset.get() + currentNode.key.length();
+        if (index >= key.length())
+            return currentNode;
+        else {
+            offset.set(offset.get() + currentNode.key.length());
+            Node<V> result = recursiveSearch(key, offset, currentNode);
+            if (result == null)
+                offset.set(offset.get() - currentNode.key.length());
+
+            return result == null ? currentNode : result;
         }
     }
-
-    public void remove(String key) {
-        if (key.isEmpty()) {
-            throw new IllegalArgumentException("key is empty");
-        }
-
-        Node parent = null;
-        for (Node node : root.childs) {
-            if (node.key.charAt(0) == key.charAt(0)) {
-                parent = node;
-                break;
-            }
-        }
-
-        if (parent != null) {
-            root.childs.remove(parent);
-            parent = removeRecursive(key, parent);
-            if (parent != null) {
-                root.addChild(parent);
-            }
-        }
-    }
-
-    private Node removeRecursive(String key, Node node) {
-        int index = 0;
-        while (index < key.length() && index < node.key.length() && key.charAt(index) == node.key.charAt(index)) {
-            index++;
-        }
-
-
-        if (index == key.length()) {
-            if (index == node.key.length()) {
-                if (node.used) {
-                    size--;
-                    if (node.childs.size() == 0) {
-                        return null;
-                    }
-                    if (node.childs.size() == 1) {
-                        Node child = node.childs.iterator().next();
-                        if (!child.used && child.childs.size() == 0) {
-                            return null;
-                        }
-
-                        child.key = node.key + child.key;
-                        return child;
-                    }
-                    node.used = false;
-                    node.value = null;
-                }
-                return node;
-            } else {
-                return node;
-            }
-        } else {
-            if (index == node.key.length()) {
-                Node parent = null;
-                for (Node n : node.childs) {
-                    if (n.key.charAt(0) == key.charAt(index)) {
-                        parent = n;
-                        break;
-                    }
-                }
-                if (parent == null) {
-                    return node;
-                } else {
-                    node.childs.remove(parent);
-                    parent = removeRecursive(key.substring(index), parent);
-                    if (parent != null) {
-                        node.addChild(parent);
-                    }
-                    return node;
-                }
-            } else {
-                return node;
-            }
-        }
-    }
-
 
     public boolean contains(String key) {
-        if (key.isEmpty()) {
-            throw new IllegalArgumentException("key is empty");
-        }
+        if (key.length() == 0)
+            return root.isContainsValue;
 
-        Node parent = null;
-        for (Node node : root.childs) {
-            if (node.key.charAt(0) == key.charAt(0)) {
-                parent = node;
-                break;
-            }
-        }
 
-        if (parent == null) {
+        AtomicInteger offset = new AtomicInteger(0);
+        Node<V> node = recursiveSearch(key, offset, root);
+        if (node == null || !node.isContainsValue)
             return false;
-        } else {
-            return containsRecursive(key, parent);
-        }
-    }
 
-    private boolean containsRecursive(String key, Node node) {
+        if (node.key.length() != key.length() - offset.get())
+            return false;
 
-        int index = 0;
-        while (index < key.length() && index < node.key.length() && key.charAt(index) == node.key.charAt(index)) {
-            index++;
-        }
-
-        if (index == key.length()) {
-            return index == node.key.length();
-        } else {
-            if (index == node.key.length()) {
-                Node parent = null;
-                for (Node n : node.childs) {
-                    if (n.key.charAt(0) == key.charAt(index)) {
-                        parent = n;
-                        break;
-                    }
-                }
-
-                return parent != null && containsRecursive(key.substring(index), parent);
-            } else {
+        for (int i = 0; i < node.key.length(); i++)
+            if (node.key.charAt(i) != key.charAt(i + offset.get()))
                 return false;
-            }
-        }
-    }
 
+        return true;
+    }
 
     public V get(String key) {
-        if (key.isEmpty()) {
-            throw new IllegalArgumentException("key is empty!");
-        }
+        if (key.length() == 0)
+            return root.isContainsValue ? root.value : null;
 
-        Node parent = null;
-        for (Node node : root.childs) {
-            if (node.key.charAt(0) == key.charAt(0)) {
-                parent = node;
-                break;
-            }
-        }
-
-        if (parent == null) {
-            return null;
-        } else {
-            return getRecursive(key, parent);
-        }
-
-    }
-
-    private V getRecursive(String key, Node node) {
-        int index = 0;
-        while (index < key.length() && index < node.key.length() && key.charAt(index) == node.key.charAt(index)) {
-            index++;
-        }
-
-        if (index == key.length()) {
-            if (index == node.key.length() && node.used) {
-                return node.value;
-            }
+        AtomicInteger offset = new AtomicInteger(0);
+        Node<V> node = recursiveSearch(key, offset, root);
+        if (node == null || !node.isContainsValue)
             return null;
 
-        } else {
-            if (index == node.key.length()) {
-                Node parent = null;
-                for (Node n : node.childs) {
-                    if (n.key.charAt(0) == key.charAt(index)) {
-                        parent = n;
-                        break;
-                    }
-                }
-                if (parent == null) {
-                    return null;
-                } else {
-                    return getRecursive(key.substring(index), parent);
-                }
-            } else {
+        if (node.key.length() != key.length() - offset.get())
+            return null;
+
+        for (int i = 0; i < node.key.length(); i++)
+            if (node.key.charAt(i) != key.charAt(i + offset.get()))
                 return null;
+
+        return node.value;
+    }
+
+    public boolean remove(String key) {
+        if (key.length() == 0) {
+            root.value = null;
+            boolean result = root.isContainsValue;
+            root.isContainsValue = false;
+            return result;
+        }
+
+        AtomicInteger offset = new AtomicInteger();
+        Node<V> node = recursiveSearch(key, offset, root);
+        if (node == null || !node.isContainsValue)
+            return false;
+
+        if (node.key.length() != key.length() - offset.get())
+            return false;
+
+        for (int i = 0; i < node.key.length(); i++)
+            if (node.key.charAt(i) != key.charAt(i + offset.get()))
+                return false;
+
+
+        node.parent.children.remove(node);
+        if (node.children.size() == 0) {
+            recursiveRemove(node.parent);
+            node.parent = null;
+        } else {
+            if (node.children.size() == 1) {
+                Node<V> child = node.children.remove(0);
+                child.parent = node.parent;
+                child.key = node.key + child.key;
+                child.parent.children.add(child);
+            } else {
+                node.isContainsValue = false;
+                node.value = null;
             }
         }
 
+
+        return true;
+    }
+
+    private void recursiveRemove(Node<V> node) {
+        if (node == null || node.parent == null)
+            return;
+
+        if (node.children.size() != 0 || node.isContainsValue)
+            return;
+
+
+        node.parent.children.remove(node);
+        node.parent = null;
+
+        recursiveRemove(node);
     }
 
 
-    public int size() {
-        return size;
-    }
-
-
-    private class Node {
-        private String key;
+    private static class Node<V> {
         private V value;
-        private List<Node> childs;
-        private boolean used = false;
+        private String key;
+        private boolean isContainsValue = false;
+        private List<Node<V>> children = new ArrayList<>(0);
+        private Node<V> parent;
 
-        private Node(String key, V value) {
+        public Node(String key, V value, boolean isContainsValue, Node<V> parent) {
             this.key = key;
             this.value = value;
-            this.used = true;
-            this.childs = new ArrayList<Node>(2);
+            this.isContainsValue = isContainsValue;
+            this.parent = parent;
         }
 
-        private void addChild(Node child) {
-            childs.add(child);
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) return true;
+            if (!(obj instanceof Node))
+                return false;
+
+            Node<?> other = (Node<?>) obj;
+            return Objects.equals(this.value, other.value) && Objects.equals(this.key, other.value);
         }
 
-        private void removeChild(Node child) {
-            childs.remove(child);
+        @Override
+        public int hashCode() {
+            return 11
+                    + (this.key == null ? 1 : this.key.hashCode()) * 17
+                    + (this.value == null ? 1 : this.value.hashCode()) * 31;
         }
-
     }
 }
