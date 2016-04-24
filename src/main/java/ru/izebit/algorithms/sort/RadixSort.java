@@ -21,21 +21,21 @@ public class RadixSort extends Sort<Integer> {
 
     @Override
     protected void customSort(List<Integer> list) throws IllegalArgumentException {
-        if (Collections.min(list).compareTo(0) < 0) {
-            throw new IllegalArgumentException("Массив должен содержать неотрицательные элементы");
-        }
+        if (Collections.min(list).compareTo(0) < 0)
+            throw new IllegalArgumentException("Массив не должен содержать отрицательные элементы");
+
         for (int i = 0; i < Integer.SIZE / 8; i++) {
             int[] c = new int[256];
-            for (Integer aList : list) {
+            for (Integer aList : list)
                 c[getByte(aList, i)]++;
-            }
-            for (int j = 1; j < c.length; j++) {
+
+            for (int j = 1; j < c.length; j++)
                 c[j] += c[j - 1];
-            }
+
             Integer[] b = new Integer[list.size()];
-            for (int j = list.size() - 1; j >= 0; j--) {
+            for (int j = list.size() - 1; j >= 0; j--)
                 b[--c[getByte(list.get(j), i)]] = list.get(j);
-            }
+
             list.clear();
             list.addAll(Arrays.asList(b));
         }

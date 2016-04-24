@@ -38,39 +38,39 @@ public class ExternalMergeSort<T extends Comparable<T>> {
     }
 
     private static void prepareFile(boolean isCreate) throws IOException {
-        File[] files = new File[]{
-                new File(FIRST_FILE_NAME),
-                new File(SECOND_FILE_NAME),
-                new File(THIRD_FILE_NAME),
-                new File(FOUR_FILE_NAME)};
+        File[] files =
+                new File[]{
+                        new File(FIRST_FILE_NAME),
+                        new File(SECOND_FILE_NAME),
+                        new File(THIRD_FILE_NAME),
+                        new File(FOUR_FILE_NAME)
+                };
         if (isCreate) {
-            for (File file : files) {
-                if (!file.exists() && !file.createNewFile()) {
+            for (File file : files)
+                if (!file.exists() && !file.createNewFile())
                     throw new IOException("can't create  additional file");
-                }
-            }
-        } else {
-            for (File file : files) {
-                if (!file.delete()) {
+
+
+        } else
+            for (File file : files)
+                if (!file.delete())
                     throw new IOException("can't delete additional file");
-                }
-            }
-        }
+
+
     }
 
     private static void clearFile(String... fileNames) throws IOException {
-        for (String fileName : fileNames) {
+        for (String fileName : fileNames)
             try (BufferedWriter bw = new BufferedWriter(new FileWriter(fileName))) {
                 bw.write("");
             }
-        }
     }
 
     /**
      * сортировка содежимого файла
      *
      * @param fileName  название файла
-     * @param frameSize размер буфера, загружаемого в оперативную память
+     * @param frameSize размер буфера, загружаемого _0в оперативную память
      * @param transform функция преобразующая строку в объекты, которые нужно упорядочить
      * @throws IOException в случае, если нельза создать дополнительные файлы, или прочитать содержимое файла
      */
@@ -84,10 +84,14 @@ public class ExternalMergeSort<T extends Comparable<T>> {
         prepareFile(false);
     }
 
-    private void merge(String fileName, int frameSize, long lineCount, Function<String, T> transform) throws IOException {
-        int bufferSize = frameSize;
+    private void merge(final String fileName,
+                       final int frameSize,
+                       final long lineCount,
+                       final Function<String, T> transform) throws IOException {
 
-        boolean isDirect = true, isNextFirst = true;
+        int bufferSize = frameSize;
+        boolean isDirect = true,
+                isNextFirst = true;
 
         while (bufferSize / 2 <= lineCount) {
             //слияние двух файлов
@@ -109,6 +113,7 @@ public class ExternalMergeSort<T extends Comparable<T>> {
                         int secondPartCount = 0;
                         String currentLine, firstLine = null, secondLine = null;
                         isNextFirst = !isNextFirst;
+
                         while (firstIterator.hasNext() || secondIterator.hasNext()) {
                             if (firstPartCount < bufferSize && firstLine == null) {
                                 firstLine = firstIterator.hasNext() ? firstIterator.next() : null;
@@ -118,9 +123,10 @@ public class ExternalMergeSort<T extends Comparable<T>> {
                                 secondLine = secondIterator.hasNext() ? secondIterator.next() : null;
                                 secondPartCount++;
                             }
-                            if (firstLine == null && secondLine == null) {
+
+                            if (firstLine == null && secondLine == null)
                                 break;
-                            }
+
 
                             if (firstLine == null) {
                                 currentLine = secondLine;
@@ -159,9 +165,9 @@ public class ExternalMergeSort<T extends Comparable<T>> {
                 Path inputPath;
                 if (isDirect) {
                     inputPath = isNextFirst ? Paths.get(THIRD_FILE_NAME) : Paths.get(FOUR_FILE_NAME);
-                } else {
+                } else
                     inputPath = isNextFirst ? Paths.get(FIRST_FILE_NAME) : Paths.get(SECOND_FILE_NAME);
-                }
+
                 Files.copy(inputPath, Paths.get(fileName), StandardCopyOption.REPLACE_EXISTING);
 
             }
@@ -178,10 +184,14 @@ public class ExternalMergeSort<T extends Comparable<T>> {
      * @return количество строк, содержащихся в исходном файле
      * @throws IOException в случае если нельзя прочесть содержимое файла или создать дополнительные файлы
      */
-    private long divideAndSort(String fileName, int frameSize, Function<String, T> transform) throws IOException {
+    private long divideAndSort(final String fileName,
+                               final int frameSize,
+                               final Function<String, T> transform) throws IOException {
+
         boolean isNextFirstWriter = true;
         List<T> buffer = new ArrayList<>(frameSize);
         long lineCount = 0;
+
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName));
              BufferedWriter firstWriter = new BufferedWriter(new FileWriter(FIRST_FILE_NAME));
              BufferedWriter secondWriter = new BufferedWriter(new FileWriter(SECOND_FILE_NAME))) {
@@ -190,6 +200,7 @@ public class ExternalMergeSort<T extends Comparable<T>> {
             while ((line = reader.readLine()) != null) {
                 lineCount++;
                 buffer.add(transform.apply(line));
+
                 if (buffer.size() == frameSize) {
                     Collections.sort(buffer);
                     BufferedWriter writer = isNextFirstWriter ? firstWriter : secondWriter;
@@ -207,11 +218,13 @@ public class ExternalMergeSort<T extends Comparable<T>> {
                 BufferedWriter writer = isNextFirstWriter ? firstWriter : secondWriter;
                 for (T number : buffer) {
                     if (number == null) break;
+
                     writer.write(number.toString());
                     writer.newLine();
                 }
             }
         }
+
         return lineCount;
     }
 }
