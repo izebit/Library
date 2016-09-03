@@ -20,7 +20,7 @@ import java.util.stream.Stream;
  * @see <a href="http://www.algolib.narod.ru/Sort/PolyPhaseMerge.html">Внешняя сортировка</a>
  * Created by Artem Konovalov on 9/13/15.
  */
-public class ExternalMergeSort<T extends Comparable<T>> {
+public class ExternalMergeSort<T extends Comparable<? super T>> {
     private static final String FIRST_FILE_NAME = "a.txt";
     private static final String SECOND_FILE_NAME = "b.txt";
     private static final String THIRD_FILE_NAME = "c.txt";
@@ -137,7 +137,7 @@ public class ExternalMergeSort<T extends Comparable<T>> {
                             } else {
                                 int result = transform.apply(firstLine).compareTo(transform.apply(secondLine));
                                 if (result == 0) {
-                                    currentLine = firstLine + "\n" + secondLine;
+                                    currentLine = firstLine + System.lineSeparator() + secondLine;
                                     firstLine = secondLine = null;
                                 } else if (result > 0) {
                                     currentLine = secondLine;

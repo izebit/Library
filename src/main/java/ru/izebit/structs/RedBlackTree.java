@@ -17,7 +17,7 @@ public class RedBlackTree<K extends Comparable<K>, V> {
         NIL.parent = NIL;
         NIL.leftChild = NIL;
         NIL.rightChild = NIL;
-        NIL.colour = Colour.black;
+        NIL.colour = Colour.BLACK;
     }
 
     private int size;
@@ -83,7 +83,7 @@ public class RedBlackTree<K extends Comparable<K>, V> {
             if (current != NIL) {
                 size--;
                 simpleRemoveNode(current);
-                head.colour = Colour.black;
+                head.colour = Colour.BLACK;
             }
         }
         return false;
@@ -92,7 +92,7 @@ public class RedBlackTree<K extends Comparable<K>, V> {
     private void simpleRemoveNode(Node<K, V> node) {
         if (node.leftChild == NIL && node.rightChild == NIL) {
             //вершина лист, и она черная - требуется соблюсти красночерные свойства
-            if (node.colour == Colour.black) {
+            if (node.colour == Colour.BLACK) {
                 fixUpBeforeRemove(node);
             }
             //удаление вершины
@@ -128,7 +128,7 @@ public class RedBlackTree<K extends Comparable<K>, V> {
                     node.leftChild.setParent(node.parent);
                     head = (head == node) ? node.leftChild : head;
 
-                    if (node.colour == Colour.black) {
+                    if (node.colour == Colour.BLACK) {
                         fixUpBeforeRemove(node.leftChild);
                     }
                 } else {
@@ -140,7 +140,7 @@ public class RedBlackTree<K extends Comparable<K>, V> {
                     node.rightChild.setParent(node.parent);
                     head = (head == node) ? node.rightChild : head;
 
-                    if (node.colour == Colour.black) {
+                    if (node.colour == Colour.BLACK) {
                         fixUpBeforeRemove(node.rightChild);
                     }
                 }
@@ -153,14 +153,14 @@ public class RedBlackTree<K extends Comparable<K>, V> {
             return;
         }
 
-        if (node.colour == Colour.red) {
-            node.setColour(Colour.black);
+        if (node.colour == Colour.RED) {
+            node.setColour(Colour.BLACK);
         } else {
             //брат красный
             Node<K, V> brother = node.getBrother();
-            if (brother.colour == Colour.red) {
-                node.parent.setColour(Colour.red);
-                brother.setColour(Colour.black);
+            if (brother.colour == Colour.RED) {
+                node.parent.setColour(Colour.RED);
+                brother.setColour(Colour.BLACK);
                 if (node.parent.rightChild == node) {
                     rightRotate(node.parent);
                 } else {
@@ -169,37 +169,37 @@ public class RedBlackTree<K extends Comparable<K>, V> {
             }
             //брат и оба его потомка черные
             brother = node.getBrother();
-            if (brother.leftChild.colour == Colour.black && brother.rightChild.colour == Colour.black) {
-                brother.setColour(Colour.red);
+            if (brother.leftChild.colour == Colour.BLACK && brother.rightChild.colour == Colour.BLACK) {
+                brother.setColour(Colour.RED);
                 fixUpBeforeRemove(node.parent);
             } else {
 
                 //брат и его одинаковый потомок черные
-                boolean bothRight = node.parent.leftChild == node && node.parent.rightChild.rightChild.colour == Colour.black;
-                boolean bothLeft = node.parent.rightChild == node && node.parent.leftChild.leftChild.colour == Colour.black;
+                boolean bothRight = node.parent.leftChild == node && node.parent.rightChild.rightChild.colour == Colour.BLACK;
+                boolean bothLeft = node.parent.rightChild == node && node.parent.leftChild.leftChild.colour == Colour.BLACK;
                 if (bothLeft || bothRight) {
-                    brother.setColour(Colour.red);
+                    brother.setColour(Colour.RED);
                     if (bothRight) {
-                        brother.leftChild.setColour(Colour.black);
+                        brother.leftChild.setColour(Colour.BLACK);
                         rightRotate(brother);
                     } else {
-                        brother.rightChild.setColour(Colour.black);
+                        brother.rightChild.setColour(Colour.BLACK);
                         leftRotate(brother);
                     }
                 }
 
                 //брат черный а его одинаковый потомок красный
                 brother = node.getBrother();
-                bothRight = node.parent.leftChild == node && brother.rightChild.colour == Colour.red;
-                bothLeft = node.parent.rightChild == node && brother.leftChild.colour == Colour.red;
+                bothRight = node.parent.leftChild == node && brother.rightChild.colour == Colour.RED;
+                bothLeft = node.parent.rightChild == node && brother.leftChild.colour == Colour.RED;
                 if (bothLeft || bothRight) {
                     brother.setColour(node.parent.colour);
-                    node.parent.setColour(Colour.black);
+                    node.parent.setColour(Colour.BLACK);
                     if (bothRight) {
-                        brother.rightChild.setColour(Colour.black);
+                        brother.rightChild.setColour(Colour.BLACK);
                         leftRotate(node.parent);
                     } else {
-                        brother.leftChild.setColour(Colour.black);
+                        brother.leftChild.setColour(Colour.BLACK);
                         rightRotate(node.parent);
                     }
                 }
@@ -218,7 +218,7 @@ public class RedBlackTree<K extends Comparable<K>, V> {
     public boolean add(K key, V value) {
         if (head == NIL) {
             head = new Node<K, V>(key, value);
-            head.setColour(Colour.black);
+            head.setColour(Colour.BLACK);
         } else {
             Node<K, V> parent = head;
             Node<K, V> current = head;
@@ -244,7 +244,7 @@ public class RedBlackTree<K extends Comparable<K>, V> {
             }
 
             //если родитель красный то возможно нарушение красно-черных свойств
-            if (parent.colour == Colour.red) {
+            if (parent.colour == Colour.RED) {
                 fixUpAfterAdd(current);
             }
         }
@@ -253,21 +253,21 @@ public class RedBlackTree<K extends Comparable<K>, V> {
     }
 
     private void fixUpAfterAdd(Node<K, V> node) {
-        while (node != head && node.parent.colour == Colour.red) {
+        while (node != head && node.parent.colour == Colour.RED) {
             //дядя красный
             Node<K, V> uncle = node.getUncle();
-            if (uncle.colour == Colour.red) {
-                node.parent.setColour(Colour.black);
-                uncle.setColour(Colour.black);
-                node.parent.parent.setColour(Colour.red);
+            if (uncle.colour == Colour.RED) {
+                node.parent.setColour(Colour.BLACK);
+                uncle.setColour(Colour.BLACK);
+                node.parent.parent.setColour(Colour.RED);
                 node = node.parent.parent;
             } else {
                 //родитель и потомок одинаковые дети и оба красные
                 boolean bothLeft = node.parent.parent.leftChild == node.parent && node.parent.leftChild == node;
                 boolean bothRight = node.parent.parent.rightChild == node.parent && node.parent.rightChild == node;
                 if (bothLeft || bothRight) {
-                    node.parent.setColour(Colour.black);
-                    node.parent.parent.setColour(Colour.red);
+                    node.parent.setColour(Colour.BLACK);
+                    node.parent.parent.setColour(Colour.RED);
                     if (bothLeft) {
                         rightRotate(node.parent.parent);
                     } else {
@@ -291,7 +291,7 @@ public class RedBlackTree<K extends Comparable<K>, V> {
             }
         }
 
-        head.colour = Colour.black;
+        head.colour = Colour.BLACK;
     }
 
     private void leftRotate(Node<K, V> node) {
@@ -368,7 +368,7 @@ public class RedBlackTree<K extends Comparable<K>, V> {
             if (node == NIL) {
                 return;
             }
-            if (node.colour == Colour.black) {
+            if (node.colour == Colour.BLACK) {
                 count++;
             }
             if (node.leftChild == NIL && node.rightChild == NIL) {
@@ -382,9 +382,9 @@ public class RedBlackTree<K extends Comparable<K>, V> {
     }
 
 
-    private static enum Colour {
-        black,
-        red
+    private enum Colour {
+        BLACK,
+        RED
     }
 
     private static class Node<K extends Comparable<K>, V> {
@@ -403,7 +403,7 @@ public class RedBlackTree<K extends Comparable<K>, V> {
 
             this.value = value;
             this.key = key;
-            colour = Colour.red;
+            colour = Colour.RED;
         }
 
         private void setParent(Node<K, V> node) {
