@@ -10,17 +10,17 @@ import java.util.function.Function;
  *
  * @param <T> тип содержащихся элементов
  */
-public abstract class List<T> {
+public abstract class ImmutableList<T> {
     private static final Empty<Object> EMPTY = new Empty<>();
     public final int size;
 
-    protected List(int size) {
+    protected ImmutableList(int size) {
         this.size = size;
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> List<T> empty() {
-        return (List<T>) EMPTY;
+    public static <T> ImmutableList<T> empty() {
+        return (ImmutableList<T>) EMPTY;
     }
 
     /**
@@ -29,7 +29,7 @@ public abstract class List<T> {
      * @param element добавляемый элемент
      * @return новый список содержащий элемент
      */
-    public abstract List<T> add(T element);
+    public abstract ImmutableList<T> add(T element);
 
     /**
      * удаление элемента
@@ -37,7 +37,7 @@ public abstract class List<T> {
      * @param element элемент
      * @return новый список не содержащий данный элемент
      */
-    public abstract List<T> remove(T element);
+    public abstract ImmutableList<T> remove(T element);
 
     /**
      * удаление элемента по индексу
@@ -45,7 +45,14 @@ public abstract class List<T> {
      * @param index индекс удаляемого элемента
      * @return новый список без элемента с заданным индексом
      */
-    public abstract List<T> remove(int index);
+    public ImmutableList<T> remove(int index) {
+        if (index < 0)
+            throw new IllegalArgumentException("index must be more 0");
+
+        return innerRemove(index);
+    }
+
+    protected abstract ImmutableList<T> innerRemove(int index);
 
     /**
      * проверка содержания элемента в списке
@@ -61,7 +68,7 @@ public abstract class List<T> {
      * @param other другой список
      * @return список содержащий элементы из исходного списка и other
      */
-    public abstract List<T> union(List<T> other);
+    public abstract ImmutableList<T> union(ImmutableList<T> other);
 
     /**
      * интерация по списку
@@ -75,24 +82,24 @@ public abstract class List<T> {
         return size == 0;
     }
 
-    private static class Empty<T> extends List<T> {
+    private static class Empty<T> extends ImmutableList<T> {
 
         private Empty() {
             super(0);
         }
 
         @Override
-        public List<T> add(T element) {
+        public ImmutableList<T> add(T element) {
             return new Cons<>(element, empty());
         }
 
         @Override
-        public List<T> remove(T element) {
+        public ImmutableList<T> remove(T element) {
             return this;
         }
 
         @Override
-        public List<T> remove(int index) {
+        public ImmutableList<T> innerRemove(int index) {
             return this;
         }
 
@@ -102,29 +109,29 @@ public abstract class List<T> {
         }
 
         @Override
-        public List<T> union(List<T> other) {
+        public ImmutableList<T> union(ImmutableList<T> other) {
             return other;
         }
 
     }
 
-    public static class Cons<T> extends List<T> {
+    public static class Cons<T> extends ImmutableList<T> {
         public final T head;
-        public final List<T> tail;
+        public final ImmutableList<T> tail;
 
-        public Cons(T head, List<T> tail) {
+        public Cons(T head, ImmutableList<T> tail) {
             super(1 + tail.size);
             this.head = head;
             this.tail = tail;
         }
 
         @Override
-        public List<T> add(T element) {
+        public ImmutableList<T> add(T element) {
             return new Cons<>(head, tail.add(element));
         }
 
         @Override
-        public List<T> remove(T element) {
+        public ImmutableList<T> remove(T element) {
             if (head.equals(element))
                 if (tail.isEmpty())
                     return empty();
@@ -137,11 +144,9 @@ public abstract class List<T> {
         }
 
         @Override
-        public List<T> remove(int index) {
-            if (index < 0)
-                throw new IllegalArgumentException("index must be more 0");
+        public ImmutableList<T> innerRemove(int index) {
 
-            BiFunction<Integer, List<T>, List<T>> recursion = (idx, list) -> {
+            BiFunction<Integer, ImmutableList<T>, ImmutableList<T>> recursion = (idx, list) -> {
                 if (idx.intValue() == 0) {
                     if (list.isEmpty())
                         return empty();
@@ -168,11 +173,11 @@ public abstract class List<T> {
         }
 
         @Override
-        public List<T> union(List<T> other) {
+        public ImmutableList<T> union(ImmutableList<T> other) {
             if (other.isEmpty())
                 return this;
 
-            Function<List<T>, List<T>> recursion = list -> {
+            Function<ImmutableList<T>, ImmutableList<T>> recursion = list -> {
                 if (list.isEmpty())
                     return other;
 
