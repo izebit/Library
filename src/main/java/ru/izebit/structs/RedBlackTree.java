@@ -1,17 +1,14 @@
 package ru.izebit.structs;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Date: 08.09.12
  * Time: 16:12
  *
  * @author Artem Konovalov
  */
-@SuppressWarnings("unchecked")
-public class RedBlackTree<K extends Comparable<K>, V> {
-    private static final Node NIL = new Node(null, null);
+public class RedBlackTree<K extends Comparable<? super K>, V> {
+    @SuppressWarnings("unchecked")
+    static final Node NIL = new Node<>(null, null);
 
     static {
         NIL.parent = NIL;
@@ -20,12 +17,21 @@ public class RedBlackTree<K extends Comparable<K>, V> {
         NIL.colour = Colour.BLACK;
     }
 
+    Node<K, V> head;
     private int size;
-    private Node<K, V> head;
 
+    @SuppressWarnings("unchecked")
     public RedBlackTree() {
         head = NIL;
         size = 0;
+    }
+
+    private static String show(Node node) {
+        if (node == NIL)
+            return "";
+
+        String result = (node.key + "  " + node.colour + " |" + node.leftChild.key + "|" + node.rightChild.key + "|");
+        return result + show(node.leftChild) + show(node.rightChild);
     }
 
     /**
@@ -64,8 +70,12 @@ public class RedBlackTree<K extends Comparable<K>, V> {
      *
      * @param key ключ, запись с котором следует удалить
      * @return true если запись с таким ключом есть, иначе false
+     * @throws IllegalArgumentException ключ не должен быть null
      */
     public boolean remove(K key) {
+        if (key == null)
+            throw new IllegalArgumentException("key must be is not null");
+
         if (head != NIL) {
             Node<K, V> current = head;
             while (current != NIL) {
@@ -84,11 +94,13 @@ public class RedBlackTree<K extends Comparable<K>, V> {
                 size--;
                 simpleRemoveNode(current);
                 head.colour = Colour.BLACK;
+                return true;
             }
         }
         return false;
     }
 
+    @SuppressWarnings("unchecked")
     private void simpleRemoveNode(Node<K, V> node) {
         if (node.leftChild == NIL && node.rightChild == NIL) {
             //вершина лист, и она черная - требуется соблюсти красночерные свойства
@@ -214,10 +226,14 @@ public class RedBlackTree<K extends Comparable<K>, V> {
      * @param key   ключ
      * @param value значение
      * @return false если в дереве есть уже пара с таким ключом, true если нет
+     * @throws IllegalArgumentException key не должен быть null
      */
     public boolean add(K key, V value) {
+        if (key == null)
+            throw new IllegalArgumentException("key must be is not null");
+
         if (head == NIL) {
-            head = new Node<K, V>(key, value);
+            head = new Node<>(key, value);
             head.setColour(Colour.BLACK);
         } else {
             Node<K, V> parent = head;
@@ -235,7 +251,7 @@ public class RedBlackTree<K extends Comparable<K>, V> {
                 }
             }
 
-            current = new Node<K, V>(key, value);
+            current = new Node<>(key, value);
             current.parent = parent;
             if (current.key.compareTo(parent.key) > 0) {
                 parent.setRightChild(current);
@@ -338,64 +354,30 @@ public class RedBlackTree<K extends Comparable<K>, V> {
         node.parent.setRightChild(node);
     }
 
-    //рекурсивно обходит дерево
-    public void show(Node node) {
-        if (node == NIL) {
-            return;
-        }
-
-        if (node == null) {
-            node = head;
-        }
-        System.out.println(node.key + "  " + node.colour + " |" + node.leftChild.key + "|" + node.rightChild.key + "|");
-        show(node.leftChild);
-        show(node.rightChild);
-    }
-
-    //проверяет коректность красно-черных свойств
-    public void test(Node<K, V> node, int count, List<Integer> results) {
-        if (node == null) {
-            List<Integer> list = new ArrayList<Integer>();
-            test(head, 0, list);
-            for (int i = 1; i < list.size(); i++) {
-                if (!list.get(i - 1).equals(list.get(i))) {
-                    System.out.println("fail");
-                    System.out.println(list.toString());
-                    return;
-                }
-            }
-        } else {
-            if (node == NIL) {
-                return;
-            }
-            if (node.colour == Colour.BLACK) {
-                count++;
-            }
-            if (node.leftChild == NIL && node.rightChild == NIL) {
-                results.add(count);
-                return;
-            }
-
-            test(node.leftChild, count, results);
-            test(node.rightChild, count, results);
-        }
+    /**
+     * рекурсивно обходит дерево
+     *
+     * @return строка представление дерева
+     */
+    public String show() {
+        return show(head);
     }
 
 
-    private enum Colour {
+    enum Colour {
         BLACK,
         RED
     }
 
-    private static class Node<K extends Comparable<K>, V> {
+    static class Node<K extends Comparable<? super K>, V> {
+        Colour colour;
+        Node<K, V> leftChild;
+        Node<K, V> rightChild;
         private K key;
         private V value;
-        private Colour colour;
-
         private Node<K, V> parent;
-        private Node<K, V> leftChild;
-        private Node<K, V> rightChild;
 
+        @SuppressWarnings("unchecked")
         private Node(K key, V value) {
             parent = NIL;
             leftChild = NIL;
