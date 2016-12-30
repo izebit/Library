@@ -1,4 +1,4 @@
-package ru.izebit.structs;
+package ru.izebit.structs.tree;
 
 import org.junit.Test;
 
@@ -6,7 +6,7 @@ import java.util.*;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
-import static ru.izebit.structs.RedBlackTree.NIL;
+import static ru.izebit.structs.tree.RedBlackTree.NIL;
 
 public class RedBlackTreeTest {
 

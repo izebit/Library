@@ -1,4 +1,4 @@
-package ru.izebit.structs;
+package ru.izebit.structs.tree;
 
 import org.junit.Test;
 

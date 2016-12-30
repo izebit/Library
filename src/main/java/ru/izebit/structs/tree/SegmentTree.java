@@ -1,4 +1,6 @@
-package ru.izebit.structs;
+package ru.izebit.structs.tree;
+
+import java.util.Arrays;
 
 /**
  * @author Artem Konovalov
@@ -12,8 +14,7 @@ public class SegmentTree {
 
 
     public SegmentTree(int[] array) {
-        this.array = new int[array.length];
-        System.arraycopy(array, 0, this.array, 0, array.length);
+        this.array = Arrays.copyOf(array, array.length);
         this.values = new int[array.length * 4];
         build(0, array.length, 1);
     }

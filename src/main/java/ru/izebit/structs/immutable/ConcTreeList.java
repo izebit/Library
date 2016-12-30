@@ -8,10 +8,9 @@ import java.util.function.BiFunction;
 import static ru.izebit.FunctionUtils.Recursion;
 
 /**
- * https://en.wikipedia.org/wiki/Conc-Tree_list
+ *  @see <a href="https://en.wikipedia.org/wiki/Conc-Tree_list">conc-treelist</a>
  */
 public abstract class ConcTreeList<T> {
-    private static final Empty EMPTY = new Empty<>();
 
     public final int size;
     protected final int level;
@@ -36,7 +35,7 @@ public abstract class ConcTreeList<T> {
      */
     @SuppressWarnings("unchecked")
     public static <T> ConcTreeList<T> empty() {
-        return EMPTY;
+        return Empty.EMPTY;
     }
 
     private static void rangeCheck(int index) {

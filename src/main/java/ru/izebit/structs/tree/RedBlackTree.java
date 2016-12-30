@@ -1,4 +1,4 @@
-package ru.izebit.structs;
+package ru.izebit.structs.tree;
 
 /**
  * Date: 08.09.12
@@ -24,14 +24,6 @@ public class RedBlackTree<K extends Comparable<? super K>, V> {
     public RedBlackTree() {
         head = NIL;
         size = 0;
-    }
-
-    private static String show(Node node) {
-        if (node == NIL)
-            return "";
-
-        String result = (node.key + "  " + node.colour + " |" + node.leftChild.key + "|" + node.rightChild.key + "|");
-        return result + show(node.leftChild) + show(node.rightChild);
     }
 
     /**
@@ -359,8 +351,9 @@ public class RedBlackTree<K extends Comparable<? super K>, V> {
      *
      * @return строка представление дерева
      */
-    public String show() {
-        return show(head);
+    @Override
+    public String toString() {
+        return head.toString();
     }
 
 
@@ -418,6 +411,18 @@ public class RedBlackTree<K extends Comparable<? super K>, V> {
 
         private Node<K, V> getUncle() {
             return (parent.parent.leftChild == parent) ? parent.parent.rightChild : parent.parent.leftChild;
+        }
+
+        @Override
+        public String toString() {
+            String result = key + "  " + colour + " |" + leftChild.key + "|" + rightChild.key + "|";
+
+            if (leftChild != NIL)
+                result += leftChild;
+            if (rightChild != NIL)
+                result += rightChild;
+
+            return result;
         }
     }
 }
