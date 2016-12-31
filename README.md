@@ -15,6 +15,8 @@
 * СoncTreeList 
 * Immutable list
 * Монада
+* Связанный список
+* LRU cache
 
   
 ###Алгоритмы
