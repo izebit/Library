@@ -1,9 +1,9 @@
-package ru.izebit.structs.immutable;
+package ru.izebit.structs.list;
 
 
 import org.junit.Assert;
 import org.junit.Test;
-import ru.izebit.structs.immutable.ImmutableList.Cons;
+import ru.izebit.structs.list.ImmutableList.Cons;
 
 import java.util.Arrays;
 import java.util.LinkedList;

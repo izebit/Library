@@ -13,6 +13,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <project.repository.token>repository-token</project.repository.token>
     </properties>
 
     <dependencies>
@@ -62,7 +63,7 @@
                 <artifactId>coveralls-maven-plugin</artifactId>
                 <version>4.1.0</version>
                 <configuration>
-                    <repoToken>repo token</repoToken>
+                    <repoToken>${project.repository.token}</repoToken>
                 </configuration>
             </plugin>
             <plugin>

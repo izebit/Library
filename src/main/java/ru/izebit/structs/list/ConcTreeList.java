@@ -1,4 +1,4 @@
-package ru.izebit.structs.immutable;
+package ru.izebit.structs.list;
 
 import ru.izebit.FunctionUtils.TernaryFunction;
 

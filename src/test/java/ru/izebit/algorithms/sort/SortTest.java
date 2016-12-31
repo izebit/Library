@@ -8,16 +8,15 @@ import org.junit.runners.Parameterized;
 import java.util.*;
 
 /**
- * @author : artem konovalov
- *         набор тестов для проверки корректности работы алгоритма сортировки
+ * набор тестов для проверки корректности работы алгоритма сортировки
+ *
+ * @author : Artem Lonovalov
  */
 @RunWith(value = Parameterized.class)
 public class SortTest {
 
-    //пропускаем тесты которые были проинициализированы некорректными параметрами
-    boolean skipTests;
-    //первый тест запускается со списком не реализуещем random access
-    private static boolean IS_RANDOM_ACCESS_IMPL = false;
+    // пропускаем тесты которые были проинициализированы некорректными параметрами
+    private final boolean skipTests;
 
 
     private final List<Integer> list;
@@ -27,23 +26,18 @@ public class SortTest {
     public SortTest(Sort<Integer> sort, int size, int range) {
         original = getArray(size, range);
 
-        if (IS_RANDOM_ACCESS_IMPL)
-            list = new ArrayList<>(original);
-        else {
-            list = new LinkedList<>(original);
-            IS_RANDOM_ACCESS_IMPL = true;
-        }
+        list = new ArrayList<>(original);
 
 
+        boolean isWrongParams = false;
         try {
             sort.sort(list);
-            skipTests = false;
         } catch (Exception e) {
-            skipTests = true;
             Assert.assertTrue(e instanceof IllegalArgumentException);
+            isWrongParams = true;
         }
 
-
+        skipTests = isWrongParams;
     }
 
     @Parameterized.Parameters
@@ -93,6 +87,22 @@ public class SortTest {
         return data;
     }
 
+    /**
+     * создает list с произвольными числами
+     *
+     * @param size  размер массива
+     * @param range if > 0 массив заполняется числами из диапазона от 0 до range, иначе -range до 0
+     * @return сгенерированный массив
+     */
+    public static List<Integer> getArray(int size, int range) {
+        List<Integer> list = new ArrayList<>(size);
+        Random r = new Random(System.currentTimeMillis());
+        for (int i = 0; i < size; i++)
+            list.add((int) Math.signum(range) * r.nextInt(Math.abs(range)));
+
+        Collections.shuffle(list);
+        return list;
+    }
 
     @Test
     public void checkSort() {
@@ -113,23 +123,5 @@ public class SortTest {
         List<Integer> subSortList = new ArrayList<>(list);
         for (int i = 0; i < subList.size(); i++)
             Assert.assertTrue(subList.get(i).equals(subSortList.get(i)));
-    }
-
-
-    /**
-     * создает list с произвольными числами
-     *
-     * @param size  размер массива
-     * @param range if > 0 массив заполняется числами из диапазона от 0 до range, иначе -range до 0
-     * @return сгенерированный массив
-     */
-    public static List<Integer> getArray(int size, int range) {
-        List<Integer> list = new ArrayList<>(size);
-        Random r = new Random(System.currentTimeMillis());
-        for (int i = 0; i < size; i++) {
-            list.add((int) Math.signum(range) * r.nextInt(Math.abs(range)));
-        }
-        Collections.shuffle(list);
-        return list;
     }
 }

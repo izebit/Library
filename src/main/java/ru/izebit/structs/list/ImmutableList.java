@@ -1,4 +1,4 @@
-package ru.izebit.structs.immutable;
+package ru.izebit.structs.list;
 
 
 import java.util.function.BiFunction;
@@ -11,7 +11,6 @@ import java.util.function.Function;
  * @param <T> тип содержащихся элементов
  */
 public abstract class ImmutableList<T> {
-    private static final Empty<Object> EMPTY = new Empty<>();
     public final int size;
 
     protected ImmutableList(int size) {
@@ -20,7 +19,7 @@ public abstract class ImmutableList<T> {
 
     @SuppressWarnings("unchecked")
     public static <T> ImmutableList<T> empty() {
-        return (ImmutableList<T>) EMPTY;
+        return (ImmutableList<T>) Empty.EMPTY;
     }
 
     /**
@@ -83,6 +82,8 @@ public abstract class ImmutableList<T> {
     }
 
     private static class Empty<T> extends ImmutableList<T> {
+
+        private static final Empty<?> EMPTY = new Empty<>();
 
         private Empty() {
             super(0);

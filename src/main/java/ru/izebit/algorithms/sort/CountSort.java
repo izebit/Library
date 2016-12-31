@@ -11,9 +11,8 @@ import java.util.List;
 public class CountSort extends Sort<Integer> {
 
     @Override
-    @SuppressWarnings("unchecked")
     protected void customSort(List<Integer> list) throws IllegalArgumentException {
-        if (Collections.min(list).compareTo(Integer.valueOf(0)) < 0)
+        if (Collections.min(list).compareTo(0) < 0)
             throw new IllegalArgumentException("Список должен содержать не отрицательные элементы");
 
         int[] c = new int[Collections.max(list) + 1];
