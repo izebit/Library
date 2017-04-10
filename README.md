@@ -1,10 +1,10 @@
 [![Coverage Status](https://coveralls.io/repos/github/izebit/Library/badge.svg?branch=master)](https://coveralls.io/github/izebit/Library?branch=master)
 
-#Library  
+# Library  
         
-##Библиотечка с алгоритмами и структурами данных  
+## Библиотечка с алгоритмами и структурами данных  
   
-###Структуры данных
+### Структуры данных
 * Красно-черное дерево
 * Очередь (unbound)
 * Дерево отрезков
@@ -19,7 +19,7 @@
 * LRU cache
 
   
-###Алгоритмы
+### Алгоритмы
 * Поиск
     * Бинарный
     * Тернарный
