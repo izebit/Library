@@ -44,7 +44,7 @@ public abstract class ConcTreeList<T> {
     }
 
     /**
-     * добавление елемента в конец списка
+     * добавление элемента в конец списка
      *
      * @param element элемент
      * @return список

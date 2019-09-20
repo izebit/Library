@@ -1,5 +1,7 @@
 package ru.izebit.algorithms;
 
+import ru.izebit.FunctionUtils.Function;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -188,10 +190,6 @@ public final class Algorithms {
 
         }
         return leftRange;
-    }
-
-    public static interface Function {
-        public double invoke(double x);
     }
 }
 

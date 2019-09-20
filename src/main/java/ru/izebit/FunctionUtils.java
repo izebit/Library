@@ -8,6 +8,11 @@ public final class FunctionUtils {
         R apply(T t, E e, U u);
     }
 
+    @FunctionalInterface
+    public interface Function {
+        double invoke(double x);
+    }
+
     public static class Recursion<T> {
         public T function;
     }
