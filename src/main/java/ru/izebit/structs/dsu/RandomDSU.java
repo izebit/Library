@@ -8,30 +8,8 @@ import java.util.Map;
  * Случайный выбор множества при объединении
  * Временная сложность операций О(1)
  */
-public class RandomDSU<T> implements DSU<T> {
+public class RandomDSU<T> extends DSU<T> {
     private final Map<T, T> tree = new HashMap<>();
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void makeSet(T element) {
-        tree.put(element, element);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public T find(T element) {
-        if (element.equals(tree.get(element)))
-            return element;
-
-        T head = find(tree.get(element));
-        tree.put(element, head);
-
-        return head;
-    }
 
     /**
      * {@inheritDoc}

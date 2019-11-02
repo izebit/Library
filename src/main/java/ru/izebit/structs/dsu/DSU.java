@@ -1,5 +1,8 @@
 package ru.izebit.structs.dsu;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by Artem Konovalov on 3/17/16.
  * <p>
@@ -8,14 +11,17 @@ package ru.izebit.structs.dsu;
  *
  * @see <a href="https://habrahabr.ru/post/104772/">disjoint set union</a>
  */
-public interface DSU<T> {
+public abstract class DSU<T> {
+    protected final Map<T, T> tree = new HashMap<>();
 
     /**
      * создание множества с одним элементом
      *
      * @param element элемент
      */
-    void makeSet(T element);
+    public void makeSet(T element) {
+        tree.put(element, element);
+    }
 
     /**
      * поиск элемента к множеству которого относится данный
@@ -24,7 +30,21 @@ public interface DSU<T> {
      * @return элемент с которым отождествляется множество содержащее переданный элемент.
      * если такого нет null
      */
-    T find(T element);
+    public T find(T element) {
+        if (element == null)
+            return null;
+
+        if (element.equals(tree.get(element)))
+            return element;
+
+        T head = find(tree.get(element));
+        if (head == null)
+            return null;
+
+        tree.put(element, head);
+
+        return head;
+    }
 
     /**
      * объединение двух множеств
@@ -33,6 +53,5 @@ public interface DSU<T> {
      * @param secondElement элемент с которым отождествляется второе
      * @return возвращает элемент представляющий объединенной множество
      */
-    T union(T firstElement, T secondElement);
-
+    abstract T union(T firstElement, T secondElement);
 }

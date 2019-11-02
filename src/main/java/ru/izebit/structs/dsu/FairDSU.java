@@ -2,15 +2,14 @@ package ru.izebit.structs.dsu;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Created by Artem Konovalov on 3/17/16.
  * При объединении учитывается верхняя граница высоты дерева
  */
-public class FairDSU<T> implements DSU<T> {
-    private final Map<T, T> tree = new HashMap<>();
+public class FairDSU<T> extends DSU<T> {
     private final Map<T, Integer> rank = new HashMap<>();
-
 
     /**
      * {@inheritDoc}
@@ -19,25 +18,8 @@ public class FairDSU<T> implements DSU<T> {
      */
     @Override
     public void makeSet(T element) {
-        tree.put(element, element);
+        super.makeSet(element);
         rank.put(element, 1);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @param element элемент
-     * @return
-     */
-    @Override
-    public T find(T element) {
-        if (element.equals(tree.get(element)))
-            return element;
-
-        T head = find(tree.get(element));
-        tree.put(element, head);
-
-        return head;
     }
 
     /**
@@ -57,7 +39,7 @@ public class FairDSU<T> implements DSU<T> {
 
         tree.put(firstElement, secondElement);
         rank.remove(firstElement);
-        rank.compute(secondElement, (key, value) -> value + 1);
+        rank.compute(secondElement, (key, value) -> Objects.isNull(value) ? 1 : value + 1);
         return secondElement;
     }
 }
